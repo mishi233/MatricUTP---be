@@ -1,4 +1,3 @@
-from fastapi.staticfiles import StaticFiles
 from app.controllers.general_controller import Controller
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -20,11 +19,13 @@ class ServerBootstrap:
     def run(self):
         uvicorn.run(self.app, host=self.HOST, port=8000)
 
-    @asynccontextmanager
+    
     @staticmethod
+    @asynccontextmanager
     async def start_up_events(app: FastAPI):
         # Crear las tablas en la base de datos
         await create_tables(engine)
+        yield
     
 def main():
     app = FastAPI(lifespan=ServerBootstrap.start_up_events)

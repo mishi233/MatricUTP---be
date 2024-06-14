@@ -5,10 +5,9 @@ from app.utils.db_utils import get_db_session
 from app.models.schedule_model import MateriaList
 
 class Controller:
-    def __init__(self, book_service: GeneralService):
-        self.book_service = book_service
+    def __init__(self):
         self.route = APIRouter(prefix='/materia')
-        self.route.add_api_route("/obtener", self.mostrarMaterias, methods=["POST"])
+        self.route.add_api_route("/obtener", self.obtener_materias, methods=["POST"])
     
     async def obtener_materias(self, lista_materias: MateriaList, db: Session = Depends(get_db_session)):
         materias = lista_materias.materias
