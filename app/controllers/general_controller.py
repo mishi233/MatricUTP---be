@@ -1,25 +1,23 @@
-from mimetypes import guess_extension
-from typing import Optional
 from app.services.general_service import GeneralService
-from app.utils.class_utils import Injectable, inject
-from app.utils.db_utils import get_db_session
 from fastapi import APIRouter, HTTPException, status, Depends
-from fastapi.params import Query
 from sqlalchemy.orm import Session
-import re
+from app.utils.db_utils import get_db_session
+from app.models.schedule_model import MateriaList
 
-
-@inject(GeneralService)
-class BookController(Injectable):
-    def __init__(self):
-        self.route = APIRouter(prefix='/book')
-        self.route.add_api_route("/search", self.search_books, methods=["GET"])
+class Controller:
+    def __init__(self, book_service: GeneralService):
+        self.book_service = book_service
+        self.route = APIRouter(prefix='/materia')
+        self.route.add_api_route("/obtener", self.mostrarMaterias, methods=["POST"])
     
-    async def search_books(self, q: str = Query(..., min_length=3, max_length=50), db: Session = Depends(get_db_session)):
-        books = await self.bookservice.book_search(db, q)
+    async def obtener_materias(self, lista_materias: MateriaList, db: Session = Depends(get_db_session)):
+        materias = lista_materias.materias
+        print(materias)
+        result = True
+        #result = await self.book_service.procesar_materias(db, materias)
         
-        if books:
-            return {"success": True, "results": books}
+        if result:
+            return {"success": True, "results": result}
         
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="No se encontraron resultados.")
