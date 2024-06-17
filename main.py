@@ -1,9 +1,10 @@
 from app.controllers.general_controller import Controller
+from app.services.general_service import GeneralService
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from db.connection import engine
-from app.utils.db_utils import create_tables
+from app.utils.db_utils import create_tables, get_db_session
 import uvicorn, os
 
 class ServerBootstrap:
@@ -17,14 +18,20 @@ class ServerBootstrap:
         self.app.include_router(generalController.route, prefix='/api') 
 
     def run(self):
-        uvicorn.run(self.app, host=self.HOST, port=8000)
-
+        uvicorn.run(self.app, host=self.HOST, port=8000)        
     
     @staticmethod
     @asynccontextmanager
     async def start_up_events(app: FastAPI):
         # Crear las tablas en la base de datos
         await create_tables(engine)
+
+        async for session in get_db_session():
+            try:
+                await GeneralService.initialize_db(session)
+            finally:
+                await session.close()
+                
         yield
     
 def main():
