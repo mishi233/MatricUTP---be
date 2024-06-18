@@ -45,7 +45,7 @@
         "codigo": "IS723",
         "nombre_materia": "Comunicaciones I",
         "profesor": "Cesar Tabares",
-        "dificultad": null,
+        "dificultad": 3.4,
         "horario": ["Miércoles 16:00", "Miércoles 17:00", "Viernes 16:00", "Viernes 17:00"]
     },
     {

@@ -10,10 +10,6 @@ class CourseDAO(Base):
     teacher_id = Column(Integer, ForeignKey('teachers.id'), nullable=False)
     difficulty = Column(Integer, nullable=False)
 
-    __table_args__ = (
-        CheckConstraint('difficulty IN (1, 2, 3, 4, 5)', name='check_difficulty'),
-    )
-
     subject = relationship("SubjectDAO", back_populates="courses")
     teacher = relationship("TeachersDAO", back_populates="courses")
     schedules = relationship("ScheduleDAO", back_populates="course")

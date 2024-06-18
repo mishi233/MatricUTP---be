@@ -6,7 +6,7 @@ class HoursDAO(Base):
     __tablename__ = "hours"
 
     id = Column(Integer, primary_key=True, unique=True, nullable=False)
-    dayOfWeek = Column(String(10), unique=True, nullable=False)
+    dayOfWeek = Column(String(10), nullable=False)
     hour = Column(Time, nullable=False)
     
     schedules = relationship("ScheduleDAO", back_populates="hour")
