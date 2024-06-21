@@ -104,5 +104,39 @@ class GeneralService():
 
             await db.commit()
 
-    async def book_search(self, db: AsyncSession):
-        return None
+    async def obtenerInformacionMaterias(self, materia, db: AsyncSession):
+        cursos_info = []
+
+        #Obtenemos la información de las materias
+        result = await db.execute(
+            select(CourseDAO.id, CourseDAO.subject_id, SubjectDAO.name, TeachersDAO.name,  CourseDAO.difficulty)
+            .join(CourseDAO, CourseDAO.subject_id == SubjectDAO.id)
+            .join(TeachersDAO, TeachersDAO.id == CourseDAO.teacher_id)
+            .where(CourseDAO.subject_id == materia)
+        )
+        cursos = result.fetchall()
+
+        #Obtenemos los horarios de cada materia
+        for curso in cursos:
+            horario = await db.execute(
+                select(HoursDAO.dayOfWeek, HoursDAO.hour)
+                .join(ScheduleDAO, ScheduleDAO.hour_id == HoursDAO.id)
+                .where(ScheduleDAO.course_id == curso[0])
+            )
+            horarios = (horario.fetchall())
+
+            curso_info = {
+            "teacher_name": curso[3],
+            "difficulty": curso[4],
+            "horarios": [{"dayOfWeek": h[0], "hour": h[1].strftime("%H:%M")} for h in horarios]
+            }
+
+            cursos_info.append(curso_info)
+
+        materias_info = {
+            "subject_id": curso[1],
+            "subject_name": curso[2],
+            "cursos": cursos_info
+        }
+
+        return materias_info

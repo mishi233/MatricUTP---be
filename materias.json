@@ -282,7 +282,7 @@
     {
         "codigo": "IS873",
         "nombre_materia": "Laboratorio de Software",
-        "profesor": "Anónimo 5",
+        "profesor": "Andrés Felipe Ramírez",
         "dificultad": 3.1,
         "horario": ["Lunes 14:00", "Lunes 15:00", "Miércoles 14:00", "Miércoles 15:00"]
     },
