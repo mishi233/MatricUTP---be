@@ -9,6 +9,24 @@ from datetime import datetime
 import json
 import os
 
+class CursoDisponible():
+    def __init__(self, idMateria, horarios, creditos):
+        self.__idMateria = idMateria
+        self.__horarios = horarios
+        self.__creditos = creditos
+
+    @property
+    def getIdMateria(self):
+        return self.__idMateria
+
+    @property
+    def getHorarios(self):
+        return self.__horarios
+    
+    @property
+    def getCreditos(self):
+        return self.__creditos
+    
 class GeneralService():
 
     @staticmethod
@@ -140,3 +158,36 @@ class GeneralService():
         }
 
         return materias_info
+    
+
+    #Funciones para generar horario
+    def ponerMateriasObligatorias(self, lista):
+        codigos = []
+        repetidos = []
+        for materia in lista:
+            if materia.getIdMateria in codigos:
+                repetidos.append(materia.getIdMateria)
+            else:
+                codigos.append(materia.getIdMateria)   
+
+        codigosSinRepetir = []
+        for codigo in codigos:
+            if codigo not in repetidos:
+                codigosSinRepetir.append(codigo)
+
+        horarios = []
+        for codigo in codigosSinRepetir:
+            for materia in lista:
+                if materia.getIdMateria == codigo:
+                    horarios.append(materia.getHorarios)
+                    break
+        
+        mejorHorario = self.generarHorario()
+        
+
+                
+
+    def crearHorario(self, listaPosibles, listaObligatorias):  
+        self.ponerMateriasObligatorias(listaObligatorias)
+
+    
